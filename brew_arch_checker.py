@@ -42,20 +42,28 @@ def print_formula_state(formula, architecture, length):
     """
 
     package_name = formula['name']
-    if 'bottle' in formula and 'stable' in formula['bottle']:
 
-        # check architecture
-        bottles = formula['bottle']['stable']['files']
-
-        if architecture in bottles:
-            print(
-                f"✅ | {package_name:<{length}} | Available for {architecture}!"
-                )
-        else:
-            print(f"🚫 | {package_name:<{length}} | Not available right now")
-
+    # check if formula is meant to be bottled
+    if formula['bottle_disabled'] is True:
+        print(f"🧰 | {package_name:<{length}} | Bottling disabled, try '--build-from-source'")
+    
     else:
-        print(f"❌ | {package_name:<{length}} | No stable version")
+
+        # check stable bottle for this formula
+        if 'bottle' in formula and 'stable' in formula['bottle']:
+
+            # check architecture
+            bottles = formula['bottle']['stable']['files']
+
+            if architecture in bottles:
+                print(
+                    f"✅ | {package_name:<{length}} | Available for {architecture}!"
+                )
+            else:
+                print(f"🚫 | {package_name:<{length}} | Not available right now")
+
+        else:
+            print(f"❌ | {package_name:<{length}} | No stable version")
 
 
 if __name__ == "__main__":
